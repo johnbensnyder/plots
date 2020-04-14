@@ -58,6 +58,8 @@ class PDF_Combiner(object):
             A dictionary of author names with lead ID as key
         """
         proposals = pd.read_csv(self.spreadsheet)
+        # check for na values in lead id
+        proposals['Lead'] = proposals['Lead'].fillna(proposals['Proposal']).astype(int)
         proposal_groups = defaultdict(list)
         for lead, proposal in zip(proposals['Lead'], proposals['Proposal']):
             proposal_groups[lead].append(proposal)
@@ -169,11 +171,14 @@ class PDF_Combiner(object):
         else:
             out_dir = self.src_dir
         for num in self.proposal_groups.keys():
-            file_list = self.pdf_file_getter(num)
-            pdf_object = self.pdf_combiner(file_list)
-            file_name = out_dir.joinpath("{0}_{1}_combined.pdf". \
-                                         format(self.names[num], num)).as_posix()
-            pdf_writer(pdf_object, file_name)
+            try:
+                file_list = self.pdf_file_getter(num)
+                pdf_object = self.pdf_combiner(file_list)
+                file_name = out_dir.joinpath("{0}_{1}_combined.pdf". \
+                                             format(self.names[num], num)).as_posix()
+                pdf_writer(pdf_object, file_name)
+            except:
+                print("error in writing {0} pdf file".format(num))
             
 def parse_args():
     cmdline = argparse.ArgumentParser(

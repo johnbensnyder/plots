@@ -195,21 +195,8 @@ def parse_args():
 def main(spreadsheet, src_dir, out_dir):
     file_combiner = PDF_Combiner(spreadsheet, src_dir)
     file_combiner.create_files(out_dir)
-    
-    
+
 if __name__=='__main__':
     cmdline = add_cli_args()
     FLAGS, unknown_args = cmdline.parse_known_args()
     main(FLAGS.spreadsheet, FLAGS.src_dir, FLAGS.out_dir)
-    
-            
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
